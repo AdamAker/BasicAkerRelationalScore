@@ -14,12 +14,29 @@ $$\text{MAE}=\sum\limits_{i=1}^{N}|y_i-g(x_i)|$$
 
 We can compare the how well the "smart model" does as compared to the "naive model" by looking at the ratio 
 
-$$\frac{\text{MAE}_{\text{smart}}}{\text{MAE}_{\text{naive}}}$$
+$$r=\frac{\text{MAE}_{\text{smart}}}{\text{MAE}_{\text{naive}}}$$
 
 as the smart model does better, this ratio becomes smaller and as the smart model starts doing as good or worse than the naive model, this ratio becomes larger. Up to this point, this is pretty much just the predictive power score. If our smart model is doing better than the naive model, then we have at least established that constructing a function between $x$ and $y$ is useful which means that we should include it in whatever models that we wish to build.
 
 ## Making the BARS 
-Now we want to modify things a bit to make them a bit nicer. First, let's modify that 
+
+There are a number of features that would be nice to have to make the process for judging how well a variable does at predicting another
+
+The first thing we can do is to use a gaussian to map $r$ to $[0,1]$ so that we now have
+
+$$e^{-r^2}$$
+
+It'd be nice if when comparing how well a variable predicts itself, then its score would be $1$. We can make this happen by subtracting 
+
+$$r_0=\frac{\text{MAE}_{\text{self}}}{\text{MAE}_{\text{naive}}}$$
+
+from $r$ so that the score will be $1$. This makes sense because when we compare a variable to itself $r=r_0$ which means
+
+$$e^{-(r-r_0)^2}$$
+
+will become $1$. Finally, it'd be nice to be able to make it harder or easier for a feature-target pair to have a high BARS. This might be useful in case you'd like to see which variables tend to stick. This would make you feel more confident that there is a function between the feature-target pair. So we'll define the acceptence $\alpha$ as the hyperparameter which dictates how easy or difficult it is to get a high BARS. So, our final BARS is...
+
+$$\text{BARS}(r,r_0;\alpha)=e^{-\frac{(r-r_0)^2}{\alpha^2}}$$
 
 
 

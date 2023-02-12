@@ -15,64 +15,130 @@ using Measurements
 
 function makeDataDict(dataFrame, testTrainSplit)
 
-    #Load feature and target
-    targets, features = dataFrame[:,2], dataFrame[:,1]
-    features = hcat(features)
+    if length(propertynames(dataFrame))<2
+        #Load feature and target
+        targets, features = dataFrame[:,1], dataFrame[:,1]
+        features = hcat(features)
 
-    ##Calculate the median of the target
-    medianValueFeat = median(dataFrame[:,1])
-    medianValueTar = median(dataFrame[:,2])
+        ##Calculate the median of the target
+        medianValueFeat = median(dataFrame[:,1])
+        medianValueTar = median(dataFrame[:,1])
 
-    ##Split the data into testing and training
-    train, test = partition(dataFrame, testTrainSplit,rng=Random.GLOBAL_RNG,shuffle=true)
+        ##Split the data into testing and training
+        train, test = partition(dataFrame, testTrainSplit,rng=Random.GLOBAL_RNG,shuffle=true)
 
-    ##Group the columns together
-    trainData = [ train[:,1] train[:,2] ]
-    testData = [ test[:,1] test[:,2] ]
+        ##Group the columns together
+        trainData = [ train[:,1] train[:,1] ]
+        testData = [ test[:,1] test[:,1] ]
 
-    ##Extract the training Features and Targets
-    trainFeatures = trainData[:,1]
-    trainTargets = trainData[:,2]
+        ##Extract the training Features and Targets
+        trainFeatures = trainData[:,1]
+        trainTargets = trainData[:,1]
 
-    ##Extract the testing Features and Targets
-    testFeatures = testData[:,1]
-    testTargets = testData[:,2]
+        ##Extract the testing Features and Targets
+        testFeatures = testData[:,1]
+        testTargets = testData[:,1]
 
-    dataDict = Dict(:targets => targets,
-                    :features => features,
-                    :featurename => propertynames(dataFrame)[featureCol],
-                    :targetname => propertynames(dataFrame)[targetCol],
-                    :mediantarget => medianValueTar,
-                    :medianfeature => medianValueFeat,
-                    :traindata => trainData,
-                    :testdata => testData,
-                    :trainfeatures => trainFeatures,
-                    :traintargets => trainTargets,
-                    :testfeatures => testFeatures,
-                    :testtargets => testTargets)
+        dataDict = Dict(:targets => targets,
+                        :features => features,
+                        :featurename => propertynames(dataFrame)[featureCol],
+                        :targetname => propertynames(dataFrame)[targetCol],
+                        :mediantarget => medianValueTar,
+                        :medianfeature => medianValueFeat,
+                        :traindata => trainData,
+                        :testdata => testData,
+                        :trainfeatures => trainFeatures,
+                        :traintargets => trainTargets,
+                        :testfeatures => testFeatures,
+                        :testtargets => testTargets)
 
-    return dataDict
+        return dataDict
+
+    else
+
+        #Load feature and target
+        targets, features = dataFrame[:,2], dataFrame[:,1]
+        features = hcat(features)
+
+        ##Calculate the median of the target
+        medianValueFeat = median(dataFrame[:,1])
+        medianValueTar = median(dataFrame[:,2])
+
+        ##Split the data into testing and training
+        train, test = partition(dataFrame, testTrainSplit,rng=Random.GLOBAL_RNG,shuffle=true)
+
+        ##Group the columns together
+        trainData = [ train[:,1] train[:,2] ]
+        testData = [ test[:,1] test[:,2] ]
+
+        ##Extract the training Features and Targets
+        trainFeatures = trainData[:,1]
+        trainTargets = trainData[:,2]
+
+        ##Extract the testing Features and Targets
+        testFeatures = testData[:,1]
+        testTargets = testData[:,2]
+
+        dataDict = Dict(:targets => targets,
+                        :features => features,
+                        :featurename => propertynames(dataFrame)[featureCol],
+                        :targetname => propertynames(dataFrame)[targetCol],
+                        :mediantarget => medianValueTar,
+                        :medianfeature => medianValueFeat,
+                        :traindata => trainData,
+                        :testdata => testData,
+                        :trainfeatures => trainFeatures,
+                        :traintargets => trainTargets,
+                        :testfeatures => testFeatures,
+                        :testtargets => testTargets)
+
+        return dataDict
+
+    end
 
 end 
 
 function makeDataDict(dataFrame)
     
-    #Load feature and target
-    targets, features = dataFrame[:,2], dataFrame[:,1]
-    features = hcat(features)
+    if length(propertynames(dataFrame))<2
 
-    ##Calculate the median of the feature and the target
-    medianValueFeat = median(dataFrame[:,1])
-    medianValueTar = median(dataFrame[:,2])
+        #Load features
+        targets, features = dataFrame[:,1], dataFrame[:,1]
+        features = hcat(features)
 
-    dataDict = Dict(:targets => targets,
-                    :features => features,
-                    :featurename => propertynames(dataFrame)[1],
-                    :targetname => propertynames(dataFrame)[2],
-                    :mediantarget => medianValueTar,
-                    :medianfeature => medianValueFeat)
+        ##Calculate the median of the feature and the target
+        medianValueFeat = median(dataFrame[:,1])
+        medianValueTar = median(dataFrame[:,1])
 
-    return dataDict
+        dataDict = Dict(:targets => features,
+                        :features => features,
+                        :featurename => propertynames(dataFrame)[1],
+                        :targetname => propertynames(dataFrame)[1],
+                        :mediantarget => medianValueTar,
+                        :medianfeature => medianValueFeat)
+
+        return dataDict
+
+    else
+
+        #Load feature and target
+        targets, features = dataFrame[:,2], dataFrame[:,1]
+        features = hcat(features)
+
+        ##Calculate the median of the feature and the target
+        medianValueFeat = median(dataFrame[:,1])
+        medianValueTar = median(dataFrame[:,2])
+
+        dataDict = Dict(:targets => targets,
+                        :features => features,
+                        :featurename => propertynames(dataFrame)[1],
+                        :targetname => propertynames(dataFrame)[2],
+                        :mediantarget => medianValueTar,
+                        :medianfeature => medianValueFeat)
+
+        return dataDict
+
+    end
 
 end
 
@@ -108,8 +174,8 @@ function makeBARSDict(dataDict)
 
         trainFeatures = table(reshape(dataDict[:trainfeatures], length(dataDict[:trainfeatures]),1))
         features = table(reshape(dataDict[:features], length(dataDict[:features]),1))
-        trainTargets = dataDict[:traintargets]
-        targets = dataDict[:targets]
+        trainTargets = vec(dataDict[:traintargets])
+        targets = vec(dataDict[:targets])
 
         #Make the tree container
         Tree = @MLJ.load DecisionTreeRegressor pkg=DecisionTree verbosity=0;
@@ -164,7 +230,7 @@ function makeBARSDict(dataDict)
     else
 
         features = table(reshape(dataDict[:features], length(dataDict[:features]),1))
-        targets = dataDict[:targets]
+        targets = vec(dataDict[:targets])
 
         #Make the tree container
         Tree = @MLJ.load DecisionTreeRegressor pkg=DecisionTree verbosity=0;
@@ -268,10 +334,15 @@ end
 function plotTREE(BARSDict)
     theBARSScore = string(round(BARSDict[:BARS],sigdigits=3))
     R² = string(round(BARSDict[:R²],sigdigits = 3))
-    regressionPlot = scatter(BARSDict[:data][:features] ,
+    regressionPlot = scatter!(BARSDict[:data][:features],
+        BARSDict[:data][:targets],
+        markercolor = :blue,
+        markershape = :cross,
+        label = "data")
+    scatter!(BARSDict[:data][:features] ,
         BARSDict[:smartpredictions] ,
         markercolor = :purple ,
-        markershape = :cross ,
+        markershape = :xcross ,
         legend = :outerbottom,
         title = L"BARS= "*theBARSScore*", "*L"R^2= "*R²,
         label = "Smart Predictions")
@@ -305,42 +376,27 @@ function plotTREE(BARSDict)
     return regressionPlot
 end
 
-function plotTREE(BARSDict)
-    theBARSScore = string(round(BARSDict[:BARS],sigdigits=3))
-    R² = string(round(BARSDict[:R²],sigdigits = 3))
-    regressionPlot = scatter(BARSDict[:data][:features] ,
-    BARSDict[:data][:targets] ,
-        makercolor = :red ,
-        markershape = :rect ,
-        label = "Testing Data",
-        legend = :outerbottom,
-        title = L"BARS= "*theBARSScore*", "*L"R^2= "*R²)
-    scatter!(BARSDict[:data][:features] ,
-        BARSDict[:smartpredictions] ,
-        markercolor = :purple ,
-        markershape = :cross ,
-        label = "Smart Predictions")
-    scatter!(BARSDict[:data][:features],
-        BARSDict[:naivepredictions] ,
-        markercolor = :black ,
-        markershape = :xcross ,
-        label = "Naive Predictions")
-    if length(BARSDict[:treesplits])>0
-        vline!(BARSDict[:treesplits],
-        label = "Decision Tree Splits",
-        linecolor = :purple)
-    end
-    xlabel!("Feature: "*string(BARSDict[:data][:featurename]))
-    ylabel!("Target: "*string(BARSDict[:data][:targetname]))
+function bars(dataFrame,acceptance)
 
-    return regressionPlot
-end
+    selfDataFrame = DataFrame()
 
-function bars(dataFrame)
+    selfDataFrame = dataFrame[:,Not(propertynames(dataFrame)[2])]
+
+
+
+    selfdataDict = makeDataDict(selfDataFrame)
+
+    selfBARSDict = makeBARSDict(selfdataDict)
+
+    selfBARSDict = calcSelfBARS(selfBARSDict)
+
+
 
     dataDict = makeDataDict(dataFrame)
 
     BARSDict = makeBARSDict(dataDict)
+
+    BARSDict = calcBARS(BARSDict,selfBARSDict, acceptance)
 
     return BARSDict
 

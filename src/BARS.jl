@@ -1,6 +1,6 @@
 module BARS
 
-export makeDATADict, makeBARSDict, bars, plotTREE
+export bars, plotTREE
 
 using MLJ
 using MLJDecisionTreeInterface
@@ -103,12 +103,12 @@ function makeDataDict(dataFrame)
     if length(propertynames(dataFrame))<2
 
         #Load features
-        targets, features = dataFrame[:,1], dataFrame[:,1]
+        targets, features = dataFrame[:,propertynames(dataFrame)[1]], dataFrame[:,propertynames(dataFrame)[1]]
         features = hcat(features)
 
         ##Calculate the median of the feature and the target
-        medianValueFeat = median(dataFrame[:,1])
-        medianValueTar = median(dataFrame[:,1])
+        medianValueFeat = median(dataFrame[:,propertynames(dataFrame)[1]])
+        medianValueTar = median(dataFrame[:,propertynames(dataFrame)[1]])
 
         dataDict = Dict(:targets => features,
                         :features => features,
@@ -122,12 +122,12 @@ function makeDataDict(dataFrame)
     else
 
         #Load feature and target
-        targets, features = dataFrame[:,2], dataFrame[:,1]
+        targets, features = dataFrame[:,propertynames(dataFrame)[2]], dataFrame[:,propertynames(dataFrame)[1]]
         features = hcat(features)
 
         ##Calculate the median of the feature and the target
-        medianValueFeat = median(dataFrame[:,1])
-        medianValueTar = median(dataFrame[:,2])
+        medianValueFeat = median(dataFrame[:,propertynames(dataFrame)[1]])
+        medianValueTar = median(dataFrame[:,propertynames(dataFrame)[2]])
 
         dataDict = Dict(:targets => targets,
                         :features => features,
@@ -294,9 +294,6 @@ function calcSelfBARS(selfBARSDict)
     smartMAE = selfBARSDict[:smartMAE]
     naiveMAE = selfBARSDict[:naiveMAE]
 
-    r₀ = naiveMAE/smartMAE
-
-    selfBARSDict[:r₀] = r₀
     if smartMAE>naiveMAE
         BARS = NaN
     else
@@ -304,6 +301,7 @@ function calcSelfBARS(selfBARSDict)
     end
 
     selfBARSDict[:selfBARS] = BARS
+    selfBARSDict[:r₀] = smartMAE/naiveMAE
 
     return selfBARSDict
 end
@@ -380,9 +378,7 @@ function bars(dataFrame,acceptance)
 
     selfDataFrame = DataFrame()
 
-    selfDataFrame = dataFrame[:,Not(propertynames(dataFrame)[2])]
-
-
+    selfDataFrame[:,propertynames(dataFrame)[1]] = dataFrame[:,propertynames(dataFrame)[1]]
 
     selfdataDict = makeDataDict(selfDataFrame)
 
@@ -390,7 +386,27 @@ function bars(dataFrame,acceptance)
 
     selfBARSDict = calcSelfBARS(selfBARSDict)
 
+    if length(propertynames(dataFrame))<2
 
+        BARSDict = selfBARSDict
+
+        return BARSDict
+
+    else
+
+        dataDict = makeDataDict(dataFrame)
+
+        BARSDict = makeBARSDict(dataDict)
+
+        BARSDict = calcBARS(BARSDict,selfBARSDict, acceptance)
+
+    return BARSDict
+
+    end
+
+end
+
+function bars(dataFrame,selfBARSDict,acceptance)
 
     dataDict = makeDataDict(dataFrame)
 

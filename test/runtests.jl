@@ -11,6 +11,7 @@ using DataFrames
     y(t)=t.^2
     dfself = DataFrame(X=x(t))
     df = DataFrame(X=x(t),Y=y(t))
+    bigDataFrame = DataFrame(X=x(t),Y=y(t),X²=x(t).*x(t),Y²=y(t).*y(t))
 
     @testset "BARS tests" begin
 
@@ -37,6 +38,12 @@ using DataFrames
         @test typeof(BARS.calcBARS(BARSDict,selfBARSDict, α)) == Dict{Symbol,Any}
     
         BARSDict = BARS.calcBARS(BARSDict,selfBARSDict, α)
+
+    end
+
+    @testset "PBARS Tests" begin
+        
+        @test true
 
     end
 

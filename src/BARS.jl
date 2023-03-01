@@ -1,5 +1,12 @@
 module BARS
 
+
+include("pBARS.jl")
+include("modelVariables.jl")
+
+#Expose all packages as top level (Same as BARS.jl)
+push!(LOAD_PATH, @__DIR__)
+
 export bars, plotTREE
 
 using MLJ
@@ -310,15 +317,15 @@ function calcBARS(BARSDict,selfBARSDict, acceptance)
 
     smartMAE = BARSDict[:smartMAE]
     naiveMAE = BARSDict[:naiveMAE]
-    smartMAEself = selfBARSDict[:smartMAE]
     α=acceptance 
     R² = BARSDict[:R²]
     r = (smartMAE)/(naiveMAE)
-    r₀= (smartMAEself)/(naiveMAE)
+    r₀= selfBARSDict[:r₀]
+    
     if R² < 0 || R² > 1
         BARS = 0
     else
-        BARS = exp.(-((r-r₀)/α)^2)
+        BARS = exp.(-(r-r₀).^2/α^2)
     end
 
     BARSDict[:BARS] = BARS

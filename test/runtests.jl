@@ -1,6 +1,7 @@
 using BARS
 using Test
 using DataFrames
+using OrderedCollections
 
 @testset "BARS.jl" begin
 
@@ -12,6 +13,8 @@ using DataFrames
     dfself = DataFrame(X=x(t))
     df = DataFrame(X=x(t),Y=y(t))
     bigDataFrame = DataFrame(X=x(t),Y=y(t),X²=x(t).*x(t),Y²=y(t).*y(t))
+    featureName = :X
+    featureNames = [:X,:Y]
 
     @testset "BARS tests" begin
 
@@ -41,9 +44,29 @@ using DataFrames
 
     end
 
-    @testset "PBARS Tests" begin
+    @testset "PBARS.jl" begin
         
-        @test true
+        @test typeof(BARS.makeTargetsDict(bigDataFrame,featureName,α)) == OrderedDict{Any,Any}
+    
+        targetsDict = BARS.makeTargetsDict(bigDataFrame,featureName,α)
+    
+        @test typeof(BARS.calcPBARS(targetsDict)) == OrderedDict{Any,Any}
+    
+        targetsDict = BARS.calcPBARS(targetsDict)
+    
+    end
+
+    @testset "modelVariables.jl" begin
+
+        featuresDataFrame,targetsDataFrame = BARS.splitDataFrame(bigDataFrame,featureNames)
+        
+        @test typeof(BARS.makeFeaturesDict(featuresDataFrame,targetsDataFrame,α)) == OrderedDict{Any,Any}
+
+        featuresDict = BARS.makeFeaturesDict(featuresDataFrame,targetsDataFrame,α)
+
+        @test typeof(BARS.generateModelvars(featuresDict)) == OrderedDict{Any,Any}
+
+        modelVars = BARS.generateModelvars(featuresDict)
 
     end
 

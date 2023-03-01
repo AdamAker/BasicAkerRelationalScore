@@ -1,7 +1,6 @@
-module pBARS
-
 using BARS
 using OrderedCollections
+using LaTeXStrings
 
 function makeTargetsDict(dataFrame,featureName,acceptance)
 
@@ -16,6 +15,8 @@ function makeTargetsDict(dataFrame,featureName,acceptance)
     R²Below =[]
     targetsAbove =[]
     targetsBelow = []
+    pointsAbove = []
+    pointsBelow = []
 
     targetDataFrame = dataFrame[:,Not(featureName)]
     featureDataFrame = DataFrame()
@@ -24,8 +25,8 @@ function makeTargetsDict(dataFrame,featureName,acceptance)
     selfBARSDict = bars(featureDataFrame,α)
 
     targetsDict = OrderedDict()
-    targetsDict[:featureNameDict] = selfBARSDict
-    targetsDict[featureName] = string(featureName)
+    targetsDict[:featureName] = featureName
+    targetsDict[:selfBARSDict] = selfBARSDict
     targetsDict[:r₀] = selfBARSDict[:r₀]
     targetsDict[:α] = α
 
@@ -34,6 +35,8 @@ function makeTargetsDict(dataFrame,featureName,acceptance)
         featureDataFrame[:,targetName]=dataFrame[:,targetName]
 
         BARSDict = bars(featureDataFrame,selfBARSDict,α)
+
+        targetsDict[targetName]=BARSDict
 
         if BARSDict[:BARS]>BARScutoff
 
@@ -55,15 +58,15 @@ function makeTargetsDict(dataFrame,featureName,acceptance)
     
     end
 
-targetsDict[:targetsAbove] = targetsAbove 
-targetsDict[:BARSsAbove] = BARSsAbove
-targetsDict[:rAbove] = rAbove
-targetsDict[:R²Above] = R²Above
-targetsDict[:targetsBelow] = targetsBelow
-targetsDict[:BARSsBelow] = BARSsBelow
-targetsDict[:rBelow] = rBelow
-targetsDict[:R²Below] = R²Below
+    targetsDict[:targetsAbove] = targetsAbove 
+    targetsDict[:BARSsAbove] = BARSsAbove
+    targetsDict[:rAbove] = rAbove
+    targetsDict[:R²Above] = R²Above
 
+    targetsDict[:targetsBelow] = targetsBelow
+    targetsDict[:BARSsBelow] = BARSsBelow
+    targetsDict[:rBelow] = rBelow
+    targetsDict[:R²Below] = R²Below
 
 return targetsDict
 
@@ -86,48 +89,26 @@ function calcPBARS(targetsDict)
 
 end
 
-function makeFeaturesDict(featuresDataFrame,targetsDataFrame,acceptance)
-
-    featuresDict = OrderedDict()
-    powerBARSs = []
-
-    for featureName∈propertynames(featuresDataFrame)
-
-        df = DataFrame()
-        df[:,featureName]=featuresDataFrame[:,featureName]
-        df = hcat(df,targetsDataFrame)
-        
-        targetsDict = makeTargetsDict(df,featureName,acceptance)
-        targetsDict = calcPBARS(targetsDict)
-
-        featuresDict[:featureName] = targetsDict
-        push!(powerBARSs,targetDict[:pBARS])
-
-    end
-
-    featuresDict[:powerBARSs]
-    featuresDict[propertyname(featuresDataFrame)]
-
-    return featuresDict
-
-end
-
 function plotFeatureBARS(targetsDict)
 
     BARScutoff = string(round(.7,sigdigits=3))
     r₀=targetsDict[:r₀]
     α=targetsDict[:α]
-    BARSplot = plot(r₀-5:.01:r₀+5, r->exp.(-(r-r₀).^2/α^2),
+    BARSplot = plot(r₀-5*α:.01:r₀+5*α, r->exp.(-(r-r₀).^2/α^2),
     label = L"e^{-\frac{(r-r_0)^2}{\alpha^2}}",
-    title = "Feature: "*targetsDict[featureName]*", PBARS= "*string(round(targetsDict[:pBARS],sigdigits=3)),
+    title = "Feature: "*string(targetsDict[:featureName])*", PBARS= "*string(round(targetsDict[:pBARS],sigdigits=3)),
     legend = :outertopright)
-    scatter!((targetsDict[:rAbove].+r₀),
-            (targetsDict[:BARSsAbove]),
+    rAbove=targetsDict[:rAbove]
+    BARSsAbove = targetsDict[:BARSsAbove]
+    BARSsBelow = targetsDict[:BARSsBelow]
+    rBelow=targetsDict[:rBelow]
+    scatter!(rAbove,
+            BARSsAbove,
             markershape = :x,
             markercolor = :red,
             label = L"BARS_{Above}")
-    scatter!((targetsDict[:rBelow].+r₀),
-            (targetsDict[:BARSsBelow]),
+    scatter!(rBelow,
+            BARSsBelow,
             markershape = :x,
             markercolor = :blue,
             label = L"BARS_{Below}")
@@ -139,8 +120,9 @@ function plotFeatureBARS(targetsDict)
             label=L"r_0="*string(round(r₀,sigdigits=3)),
             linestyle = :dash,
             linecolor = :black)
-    xlabel!(L"r-r_0=\frac{sMAE-sMAE_{\text{self}}}{nMAE}")
+    xlabel!(L"r-r_0=\frac{sMAE-sMAE_{self}}{nMAE}")
     ylabel!(L"BARS")
-end
+
+return BARSplot
 
 end

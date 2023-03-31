@@ -3,7 +3,7 @@ using Test
 using DataFrames
 using OrderedCollections
 
-@testset "BARS.jl" begin
+@testset "BasicAkerRelationalScore.jl" begin
 
     α = .1
     t₀=0
@@ -18,55 +18,55 @@ using OrderedCollections
 
     @testset "BARS tests" begin
 
-        @test typeof(BARS.makeDataDict(dfself)) == Dict{Symbol,Any}
+        @test typeof(BasicAkerRelationalScore.makeDataDict(dfself)) == Dict{Symbol,Any}
 
-        selfDataDict = BARS.makeDataDict(dfself)
+        selfDataDict = BasicAkerRelationalScore.makeDataDict(dfself)
 
-        @test typeof(BARS.makeBARSDict(selfDataDict)) == Dict{Symbol,Any}
+        @test typeof(BasicAkerRelationalScore.makeBARSDict(selfDataDict)) == Dict{Symbol,Any}
 
-        selfBARSDict = BARS.makeBARSDict(selfDataDict)
+        selfBARSDict = BasicAkerRelationalScore.makeBARSDict(selfDataDict)
 
-        @test typeof(BARS.calcSelfBARS(selfBARSDict)) == Dict{Symbol,Any}
+        @test typeof(BasicAkerRelationalScore.calcSelfBARS(selfBARSDict)) == Dict{Symbol,Any}
 
-        selfBARSDict = BARS.calcSelfBARS(selfBARSDict)
+        selfBARSDict = BasicAkerRelationalScore.calcSelfBARS(selfBARSDict)
 
-        @test typeof(BARS.makeDataDict(df)) == Dict{Symbol,Any}
+        @test typeof(BasicAkerRelationalScore.makeDataDict(df)) == Dict{Symbol,Any}
         
-        dataDict = BARS.makeDataDict(df)
+        dataDict = BasicAkerRelationalScore.makeDataDict(df)
 
-        @test typeof(BARS.makeBARSDict(dataDict)) == Dict{Symbol,Any}
+        @test typeof(BasicAkerRelationalScore.makeBARSDict(dataDict)) == Dict{Symbol,Any}
 
-        BARSDict = BARS.makeBARSDict(dataDict)
+        BARSDict = BasicAkerRelationalScore.makeBARSDict(dataDict)
 
-        @test typeof(BARS.calcBARS(BARSDict,selfBARSDict, α)) == Dict{Symbol,Any}
+        @test typeof(BasicAkerRelationalScore.calcBARS(BARSDict,selfBARSDict, α)) == Dict{Symbol,Any}
     
-        BARSDict = BARS.calcBARS(BARSDict,selfBARSDict, α)
+        BARSDict = BasicAkerRelationalScore.calcBARS(BARSDict,selfBARSDict, α)
 
     end
 
     @testset "PBARS.jl" begin
         
-        @test typeof(BARS.makeTargetsDict(bigDataFrame,featureName,α)) == OrderedDict{Any,Any}
+        @test typeof(BasicAkerRelationalScore.makeTargetsDict(bigDataFrame,featureName,α)) == OrderedDict{Any,Any}
     
-        targetsDict = BARS.makeTargetsDict(bigDataFrame,featureName,α)
+        targetsDict = BasicAkerRelationalScore.makeTargetsDict(bigDataFrame,featureName,α)
     
-        @test typeof(BARS.calcPBARS(targetsDict)) == OrderedDict{Any,Any}
+        @test typeof(BasicAkerRelationalScore.calcPBARS(targetsDict)) == OrderedDict{Any,Any}
     
-        targetsDict = BARS.calcPBARS(targetsDict)
+        targetsDict = BasicAkerRelationalScore.calcPBARS(targetsDict)
     
     end
 
     @testset "modelVariables.jl" begin
 
-        featuresDataFrame,targetsDataFrame = BARS.splitDataFrame(bigDataFrame,featureNames)
+        featuresDataFrame,targetsDataFrame = BasicAkerRelationalScore.splitDataFrame(bigDataFrame,featureNames)
         
-        @test typeof(BARS.makeFeaturesDict(featuresDataFrame,targetsDataFrame,α)) == OrderedDict{Any,Any}
+        @test typeof(BasicAkerRelationalScore.makeFeaturesDict(featuresDataFrame,targetsDataFrame,α)) == OrderedDict{Any,Any}
 
-        featuresDict = BARS.makeFeaturesDict(featuresDataFrame,targetsDataFrame,α)
+        featuresDict = BasicAkerRelationalScore.makeFeaturesDict(featuresDataFrame,targetsDataFrame,α)
 
-        @test typeof(BARS.generateModelvars(featuresDict)) == OrderedDict{Any,Any}
+        @test typeof(BasicAkerRelationalScore.generateModelvars(featuresDict)) == OrderedDict{Any,Any}
 
-        modelVars = BARS.generateModelvars(featuresDict)
+        modelVars = BasicAkerRelationalScore.generateModelvars(featuresDict)
 
     end
 

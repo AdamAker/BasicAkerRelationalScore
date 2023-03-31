@@ -1,4 +1,4 @@
-using BARS
+using BasicAkerRelationalScore
 using OrderedCollections
 using LaTeXStrings
 
@@ -23,8 +23,8 @@ function makeFeaturesDict(featuresDataFrame,targetsDataFrame,acceptance)
         df[:,featureName]=featuresDataFrame[:,featureName]
         df = hcat(df,targetsDataFrame)
         
-        targetsDict = BARS.makeTargetsDict(df,featureName,acceptance)
-        targetsDict = BARS.calcPBARS(targetsDict)
+        targetsDict = BasicAkerRelationalScore.makeTargetsDict(df,featureName,acceptance)
+        targetsDict = BasicAkerRelationalScore.calcPBARS(targetsDict)
 
         featuresDict[featureName] = targetsDict
         push!(powerBARSs,targetsDict[:pBARS])

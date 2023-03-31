@@ -381,7 +381,7 @@ function plotTREE(BARSDict)
     return regressionPlot
 end
 
-function bars(dataFrame,acceptance)
+function selfBars(dataFrame,acceptance)
 
     selfDataFrame = DataFrame()
 
@@ -393,23 +393,7 @@ function bars(dataFrame,acceptance)
 
     selfBARSDict = calcSelfBARS(selfBARSDict)
 
-    if length(propertynames(dataFrame))<2
-
-        BARSDict = selfBARSDict
-
-        return BARSDict
-
-    else
-
-        dataDict = makeDataDict(dataFrame)
-
-        BARSDict = makeBARSDict(dataDict)
-
-        BARSDict = calcBARS(BARSDict,selfBARSDict, acceptance)
-
-    return BARSDict
-
-    end
+    return selfBARSDict
 
 end
 

@@ -22,7 +22,7 @@ function makeTargetsDict(dataFrame,featureName,acceptance)
     featureDataFrame = DataFrame()
     featureDataFrame[:,featureName] = dataFrame[:,featureName]
 
-    selfBARSDict = bars(featureDataFrame,α)
+    selfBARSDict = selfBars(featureDataFrame,α)
 
     targetsDict = OrderedDict()
     targetsDict[:featureName] = featureName

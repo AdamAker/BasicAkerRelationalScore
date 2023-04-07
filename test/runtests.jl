@@ -1,4 +1,4 @@
-using BARS
+using BasicAkerRelationalScore
 using Test
 using DataFrames
 using OrderedCollections
@@ -16,7 +16,7 @@ using OrderedCollections
     featureName = :X
     featureNames = [:X,:Y]
 
-    @testset "BARS tests" begin
+    @testset "BasicAkerRelationalScore tests" begin
 
         @test typeof(BasicAkerRelationalScore.makeDataDict(dfself)) == Dict{Symbol,Any}
 

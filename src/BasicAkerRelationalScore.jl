@@ -1,4 +1,4 @@
-module BARS
+module BasicAkerRelationalScore
 
 
 include("pBARS.jl")

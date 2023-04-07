@@ -1,4 +1,4 @@
-using BARS
+using BasicAkerRelationalScore
 using OrderedCollections
 using LaTeXStrings
 

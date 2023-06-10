@@ -75,9 +75,12 @@ end
 
 function calcPBARS(targetsDict)
 
-    if length(targetsDict[:R²Above])>0 && length(targetsDict[:BARSsAbove])>0
+    R²s = targetsDict[:R²Above]∪targetsDict[:R²Below]
+    BARSs = targetsDict[:BARSsAbove]∪targetsDict[:BARSsBelow]
 
-        targetsDict[:pBARS] = sum(targetsDict[:R²Above].*targetsDict[:BARSsAbove])
+    if length(R²s)>0 && length(BARSs)>0
+
+        targetsDict[:pBARS] = sum(R²s.*BARSs)
 
     else
 

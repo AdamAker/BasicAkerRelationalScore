@@ -39,6 +39,44 @@ function makeFeaturesDict(featuresDataFrame,targetsDataFrame,acceptance)
 
 end
 
+function makeFeaturesDict(dataFrame,acceptance)
+
+    α=acceptance
+    n=length(propertynames(dataFrame))
+    BARSMatrix = zeros(n,n)
+    R²Matrix = zeros(n,n)
+    featuresDict = OrderedDict()
+    featureList = []
+    powerBARSs = []
+    for i∈1:n
+        featureName = propertynames(dataFrame)[i]
+        push!(featureList, featureName)
+        for j∈1:n
+            targetName = propertynames(dataFrame)[j]
+            if !isequal(featureName,targetName)
+                targetsDict = BasicAkerRelationalScore.makeTargetsDict(dataFrame,featureName,α)
+                featuresDict[featureName] = targetsDict
+                BARSMatrix[n+1-i,j] = targetsDict[targetName][:BARS]
+                R²Matrix[n+1-i,j] = targetsDict[targetName][:R²]
+            else
+                BARSMatrix[n+1-i,j]= 1.0
+                R²Matrix[n+1-i,j]=1.0
+            end
+        end
+
+    end
+
+    pMatrix = R²Matrix.*BARSMatrix
+
+    featuresDict[:BARSMatrix] = BARSMatrix
+    featuresDict[:R²Matrix] = R²Matrix
+    featuresDict[:pMatrix] = pMatrix
+
+    return featuresDict
+
+end
+
+
 function plotPowerBARSs(featuresDict)
 
     finalIndex = length(featuresDict[:powerBARSs])
@@ -80,3 +118,41 @@ function generateModelvars(featuresDict)
     return modelVariables
 
 end
+
+function matrixPlot(name,matrix,dataFrame,cutoff,color,cScheme,fontSize)
+    n = length(propertynames(dataFrame))
+
+    hmap=plot(heatmap(
+        xticks = (1:1:n, propertynames(dataFrame)),
+        yticks = (n:-1:1, propertynames(dataFrame)),
+        matrix, 
+        title = name*" Heat Map",
+        xlabel = "targets",
+        ylabel = "features",
+        xrotation = 60.0,
+        c=cScheme
+    ))
+
+    for tick∈1:n
+        vline!([tick+.5], color=color, label=false)
+        hline!([tick+.5], color=color, label=false)
+    end
+
+    xpoints = [ i for i∈1:n]
+    ypoints = [ j for j∈1:n]
+    for ycoor∈ypoints
+        for xcoor∈xpoints
+            value = matrix[ycoor,xcoor]
+            if value<cutoff
+                value = 0
+            end
+            plot!((xcoor,ycoor),
+                legend = false,
+                series_annotation=text.(round((value),sigdigits=2),fontSize,color)
+            )
+        end
+    end
+
+    return hmap
+end
+

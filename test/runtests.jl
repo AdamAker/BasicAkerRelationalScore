@@ -7,14 +7,16 @@ using OrderedCollections
 
     α = .1
     t₀=0
-    t = [t₀+i for i∈0:.01:π/2]
-    x(t)=sin.(t)
-    y(t)=t.^2
+    t = [t₀+i for i∈-10π:.1:10π]
+    w(t)=t
+    x(t)=t.^2
+    y(t)=sin.(t)
+    z(t)=exp.(t)
     dfself = DataFrame(X=x(t))
     df = DataFrame(X=x(t),Y=y(t))
-    bigDataFrame = DataFrame(X=x(t),Y=y(t),X²=x(t).*x(t),Y²=y(t).*y(t))
+    bigDataFrame = DataFrame(W=w(t),X=x(t),Y=y(t),Z=z(t),X²=x(t).*x(t),Y²=y(t).*y(t),WpY=w(t).+y(t),WY=w(t).*y(t))
     featureName = :X
-    featureNames = [:X,:Y]
+    featureNames = [:W,:X,:Y,:Z]
 
     @testset "BasicAkerRelationalScore tests" begin
 
@@ -67,6 +69,10 @@ using OrderedCollections
         @test typeof(BasicAkerRelationalScore.generateModelvars(featuresDict)) == OrderedDict{Any,Any}
 
         modelVars = BasicAkerRelationalScore.generateModelvars(featuresDict)
+
+        featuresDict2 = BasicAkerRelationalScore.makeFeaturesDict(bigDataFrame,α)
+
+        BasicAkerRelationalScore.matrixPlot("BARS ",featuresDict2[:BARSMatrix],bigDataFrame,.01,:orange,:tokyo,8)
 
     end
 

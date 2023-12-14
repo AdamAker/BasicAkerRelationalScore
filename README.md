@@ -14,9 +14,7 @@ If we have two different models $g_1$ and $g_2$ mapping feature $x$ to  target $
 
 $$\text{MAE}=\sum\limits_{i=1}^{N}|y_i-g(x_i)|$$ 
 
-We can compare the how well the "smart model" does as compared to the "naive model" by looking at the ratio 
-
-$$r=\frac{\text{MAE}_{\text{smart}}}{\text{MAE}_{\text{naive}}}$$
+We can compare the how well the "smart model" does as compared to the "naive model" by looking at the ratio of $\text{MAE}_{\text{smart}}$ to $\text{MAE}_{\text{naive}}$ which is defined as $r$
 
 as the smart model does better, this ratio becomes smaller and as the smart model starts doing as good or worse than the naive model, this ratio becomes larger. Up to this point, this is pretty much just the predictive power score. If our smart model is doing better than the naive model, then we have at least established that constructing a function between $x$ and $y$ is useful which means that we should include it in whatever models that we wish to build.
 

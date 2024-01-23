@@ -7,7 +7,7 @@ include("modelVariables.jl")
 #Expose all packages as top level (Same as BARS.jl)
 push!(LOAD_PATH, @__DIR__)
 
-export bars, plotTREE
+export bars, plotTREE, makeFeaturesDict
 
 using MLJ
 using MLJDecisionTreeInterface

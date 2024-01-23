@@ -12,7 +12,7 @@ function splitDataFrame(bigDataFrame,featureNames)
 end
 
 
-function makeSmallFeaturesDict(featuresDataFrame::DataFrame,targetsDataFrame::DataFrame,acceptance::Float64)
+function makeFeaturesDict(featuresDataFrame::DataFrame,targetsDataFrame::DataFrame,acceptance::Float64)
 
     featuresDict = OrderedDict()
     featureList = []

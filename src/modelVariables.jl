@@ -107,7 +107,7 @@ end
 
 function generateModelvars(featuresDict)
 
-    D = Dict(zip(featuresDict[:featureList],featuresDict[:powerBARSs]))
+    D = OrderedDict(zip(featuresDict[:featureList],featuresDict[:powerBARSs]))
     sortedD = sort(D, byvalue = true, rev=true)
 
     modelVariables = OrderedDict()

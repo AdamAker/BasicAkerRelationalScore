@@ -1,5 +1,7 @@
 using BasicAkerRelationalScore
 using Test
+using DataFrames
+
 
 
 @testset "BasicAkerRelationalScore.jl" begin
@@ -17,13 +19,8 @@ using Test
     dataf = DataFrame(:x1 => x1, :x2 => x2, :y1 => y1, :y2 => y2, :y3 => y3, :y4 => y4, :y5 => y5 )
     newdataf = select(dataf, [:x2,:y4])
     
-    bMatrix = barsMatrix(newdataf)
-    #=
+    bMatrix = BasicAkerRelationalScore.barsMatrix(newdataf)
+    
     @test isapprox(bMatrix,[10.0 10.0 ; 3.7 10.0],rtol=.5)
-
-    =#
-
-    @test true
-
 
 end

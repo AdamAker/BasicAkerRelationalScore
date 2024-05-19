@@ -9,6 +9,15 @@ using Statistics
 using Random
 using Measurements
 
+"""
+    standardizeData(dataframe)
+
+    Given a time series, subtract the mean and divide the result by the 
+    standard deviation. This is very useful to do when using non-tree 
+    based models in ML.
+
+TBW
+"""
 function standardizeData(dataframe)
     stDataFrame = DataFrame()
     for name∈propertynames(dataframe)

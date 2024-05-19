@@ -1,6 +1,6 @@
 module BasicAkerRelationalScore
 
     export bars, barsFeatures, barsMatrix, matrixPlot
-
-    include("functions")
+    include("functions.jl")
+    
 end

@@ -9,6 +9,19 @@ using Statistics
 using Random
 using Measurements
 
+function standardizeData(dataframe)
+    stDataFrame = DataFrame()
+    for name∈propertynames(dataframe)
+        μ=mean(dataframe[!,name])
+        σ=std(dataframe[!,name])
+        z=(dataframe[!,name].-μ)./σ
+        stDataFrame[!,name] = z
+    end
+
+    return stDataFrame
+    
+end
+
 function setup(dataFrame,targetName::Symbol,featureName::Symbol)
 
     stdf = standardizeData(dataFrame)

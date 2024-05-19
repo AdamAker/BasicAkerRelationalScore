@@ -28,7 +28,7 @@ $$10e^{-r^2}$$
 
 The main advantage of doing this beside bounding our score between $0$ and $10$ is to divide the score into roughly three regions i) Low, ii) Intermediate, and iii) High. Due to the characteristic of the gaussian, the derivative
 
-$$\frac{d}{dr}\Big(10e^{-r^2}\Big)=-2re^{-r^2}$$ will not vary that much when $r$ is close to zero (in the high score region) nor far from zero (in the low score region); thus, we get good separation of of the scores for the most part. The only remaining question is where is the intermediate region?. We can bound the region of interest since the maximum change in the value of the BARS occurs when $r\approx .71$ with a maximum value of $.86$: This forms the boundary of the intermediate-to-low score region. The boundary for the high-to-intermediate should occur when a small increase in $r$, say by $.01$ leads to the score dropping below the previously establish threshold of $.71$. So, we need to solve the linearization around $r$ such that 
+$$\frac{d}{dr}\Big(10e^{-r^2}\Big)=-20re^{-r^2}$$ will not vary that much when $r$ is close to zero (in the high score region) nor far from zero (in the low score region); thus, we get good separation of of the scores for the most part. The only remaining question is where is the intermediate region?. We can bound the region of interest since the maximum change in the value of the BARS occurs when $r\approx .71$ with a maximum value of $.86$: This forms the boundary of the intermediate-to-low score region. The boundary for the high-to-intermediate should occur when a small increase in $r$, say by $.01$ leads to the score dropping below the previously establish threshold of $.71$. So, we need to solve the linearization around $r$ such that 
 
 $$e^{-r^2}-2re^{-r^2}(r+.01)=.71$$
 
@@ -39,7 +39,7 @@ which implies that $r\approx.32$ which means $BARS(.32)\approx .90$.
 | $\text{BARS} \leq 3.7$ | $3.7\leq \text{BARS} \leq 9.0$  | $9.0\geq\text{BARS}$  | 
 
 
-$$r=\frac{\text{MAE}_\text{smart}}{\text{MAE}_\text{naive}}$
+$$r=\frac{\text{MAE}_\text{smart}}{\text{MAE}_\text{naive}}$$
 
 $$\text{BARS}(r)=10*e^{-r^2}$$
 

@@ -22,23 +22,26 @@ as the smart model does better, this ratio becomes smaller and as the smart mode
 
 There are a number of features that would be nice to have to make the process for judging how well a variable does at predicting another
 
-The first thing we can do is to use a gaussian to map $r$ to $[0,1]$ so that we now have
+The main thing we can do is to use a gaussian to map $r$ to $[0,10]$ so that we now have
 
-$$e^{-r^2}$$
+$$10e^{-r^2}$$
 
-It'd be nice if when comparing how well a variable predicts itself, then its score would be $1$. We can make this happen by subtracting 
+The main advantage of doing this beside bounding our score between $0$ and $10$ is to divide the score into roughly three regions i) Low, ii) Intermediate, and iii) High. Due to the characteristic of the gaussian, the derivative
 
-$$r_0=\frac{\text{MAE}_{\text{self}}}{\text{MAE}_{\text{naive}}}$$
+$$\frac{d}{dr}\Big(10e^{-r^2}\Big)=-2re^{-r^2}$$ will not vary that much when $r$ is close to zero (in the high score region) nor far from zero (in the low score region); thus, we get good separation of of the scores for the most part. The only remaining question is where is the intermediate region?. We can bound the region of interest since the maximum change in the value of the BARS occurs when $r\approx .71$ with a maximum value of $.86$: This forms the boundary of the intermediate-to-low score region. The boundary for the high-to-intermediate should occur when a small increase in $r$, say by $.01$ leads to the score dropping below the previously establish threshold of $.71$. So, we need to solve the linearization around $r$ such that 
 
-from $r$ so that the score will be $1$. This makes sense because when we compare a variable to itself $r=r_0$ which means
+$$e^{-r^2}-2re^{-r^2}(r+.01)=.71$$
 
-$$e^{-(r-r_0)^2}$$
+which implies that $r\approx.32$ which means $BARS(.32)\approx .90$.
 
-will become $1$. Finally, it'd be nice to be able to make it harder or easier for a feature-target pair to have a high BARS. This might be useful in case you'd like to see which variables tend to stick. This would make you feel more confident that there is a function between the feature-target pair. So we'll define the acceptence $\alpha$ as the hyperparameter which dictates how easy or difficult it is to get a high BARS. So, our final BARS is...
+|       Low Score        |          Intermediate           |        High Score     |
+| ---------------------- | ------------------------------- | --------------------- |
+| $\text{BARS} \leq 3.7$ | $3.7\leq \text{BARS} \leq 9.0$  | $9.0\geq\text{BARS}$  | 
 
-$$\text{BARS}(r,r_0;\alpha)=e^{-\frac{(r-r_0)^2}{\alpha^2}}$$
 
+$$r=\frac{\text{MAE}_\text{smart}}{\text{MAE}_\text{naive}}$
 
+$$\text{BARS}(r)=10*e^{-r^2}$$
 
 ## References
 <a id="1">[1]</a> 

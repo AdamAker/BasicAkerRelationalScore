@@ -1,4 +1,4 @@
-[![CI](https://github.com/JuliaRegistries/General/actions/workflows/ci.yml/badge.svg)](https://github.com/JuliaRegistries/General/actions/workflows/ci.yml)
+[![CompatHelper](https://github.com/AdamAker/BasicAkerRelationalScore.jl/actions/workflows/CompatHelper.yml/badge.svg)](https://github.com/AdamAker/BasicAkerRelationalScore.jl/actions/workflows/CompatHelper.yml)
 
 # BasicAkerRelationalScore
 This is a dimensionality reduction algorithm which has the goal of maintaining interpretability i.e we eliminate variables directly from potential models that don't seem to add any predictive power. This is accomplished by the use of decision trees to approximate a function between two variables. This is a modified version of the [*Predictive Power Score*](#1) inspired by Florian Wetschoreck's article 
